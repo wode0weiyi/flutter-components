@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_learn/res/styles.dart';
-import 'package:flutter_learn/widgets/tq_expandableText.dart';
+import 'package:flutter_learn/widgets/expandableText/tq_expandableText.dart';
 
 class ExpandText extends StatelessWidget {
   @override

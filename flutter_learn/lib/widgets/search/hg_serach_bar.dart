@@ -6,10 +6,14 @@ class SearchBar extends StatefulWidget {
     this.hintText = '',
     this.onSearch,
     this.showCancleBtn = true,
+    this.bgColor = Colors.white,
+    this.width,
   }) : super(key: key);
   final String hintText;
   final onSearch;
   final bool showCancleBtn;
+  final Color bgColor;
+  final double width;
 
   @override
   State<StatefulWidget> createState() {
@@ -49,7 +53,7 @@ class _SearchBarState extends State<SearchBar> {
           bottom: 8,
           left: 16,
           right: (!widget.showCancleBtn || !_isInput) ? 16 : 0),
-      color: Theme.of(context).scaffoldBackgroundColor,
+      color: widget.bgColor,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -65,7 +69,7 @@ class _SearchBarState extends State<SearchBar> {
                 height: 30,
                 decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(15),
                     border: Border.all(
                         color: Color.fromRGBO(0, 0, 0, 0.1), width: 1)),
                 child: _isInput ? _buildInput() : _buildNoInput(),
