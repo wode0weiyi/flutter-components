@@ -12,6 +12,7 @@ class SearchWidget extends StatelessWidget {
     this.isShowBtn = false,
     this.onSearch,
     this.padding,
+    this.mainAxisAlignment,
   }) : super(key: key);
 
   ///占位字符样式
@@ -41,6 +42,9 @@ class SearchWidget extends StatelessWidget {
   ///搜索按钮响应事件
   final onSearch;
 
+  ///y反向对其方式
+  final MainAxisAlignment mainAxisAlignment;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -58,7 +62,11 @@ class SearchWidget extends StatelessWidget {
                 : Border.all(color: Color.fromRGBO(0, 0, 0, 0.1))),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: isShowBtn
+              ? MainAxisAlignment.spaceBetween
+              : mainAxisAlignment != null
+                  ? mainAxisAlignment
+                  : MainAxisAlignment.spaceBetween,
           children: [
             Row(
               children: [

@@ -8,12 +8,14 @@ class SearchBar extends StatefulWidget {
     this.showCancleBtn = true,
     this.bgColor = Colors.white,
     this.width,
+    this.autofocus = false,
   }) : super(key: key);
   final String hintText;
   final onSearch;
   final bool showCancleBtn;
   final Color bgColor;
   final double width;
+  final bool autofocus;
 
   @override
   State<StatefulWidget> createState() {
@@ -153,7 +155,7 @@ class _SearchBarState extends State<SearchBar> {
                   TextStyle(color: Color.fromRGBO(0, 0, 0, 0.8), fontSize: 12),
               controller: _controller,
               focusNode: _node,
-              autofocus: true,
+              autofocus: widget.autofocus,
               textInputAction: TextInputAction.search,
               onEditingComplete: () {
                 if (_controller.text.isNotEmpty) {

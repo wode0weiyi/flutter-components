@@ -13,6 +13,29 @@ class DemoDart extends StatelessWidget {
         centerTitle: '搜索',
         isBack: true,
         actionName: '菜单',
+        leftChild: Container(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Icon(Icons.menu)),
+        rightChild: Container(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            children: [
+              Icon(
+                Icons.message,
+                color: Colors.white,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Text(
+                '消息',
+                style: TextStyle(color: Colors.white),
+              )
+            ],
+          ),
+        ),
+        onSearch: () {},
+        onPressed: () {},
         // isBack: false,
       ),
       body: Container(

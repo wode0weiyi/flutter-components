@@ -20,6 +20,9 @@ class HGAppBar extends StatefulWidget implements PreferredSizeWidget {
     this.onSearch,
     this.hintText = '',
     this.showCancleBtn = true,
+    this.mainAxisAlignment,
+    this.leftChild,
+    this.rightChild,
   }) : super(key: key);
 
   ///背景色
@@ -58,11 +61,14 @@ class HGAppBar extends StatefulWidget implements PreferredSizeWidget {
   ///是否展示右边取消/搜索按钮
   final bool showCancleBtn;
 
-  ///左边子视图
-  // final Widget leftChild;
+  /// 搜索框内部空间y方向对齐方式
+  final MainAxisAlignment mainAxisAlignment;
 
-  // ///右边子视图
-  // final Widget rightChild;
+  ///左边子视图,设置的时候最好设置左右padding
+  final Widget leftChild;
+
+  ///右边子视图，设置的时候最好设置左右padding
+  final Widget rightChild;
 
   @override
   State<StatefulWidget> createState() {
@@ -74,24 +80,10 @@ class HGAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _HGAppBarState extends State<HGAppBar> {
-  final TextEditingController _controller = TextEditingController(text: '');
-  final FocusNode _focusNode = FocusNode();
-  bool _isFocus = false;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _focusNode.addListener(() {
-      if (_focusNode.hasFocus) {
-        setState(() {
-          _isFocus = true;
-        });
-      } else {
-        setState(() {
-          _isFocus = false;
-        });
-      }
-    });
   }
 
   @override
@@ -110,6 +102,7 @@ class _HGAppBarState extends State<HGAppBar> {
             ? SystemUiOverlayStyle.light
             : SystemUiOverlayStyle.dark;
 
+    ///返回widget
     Widget back = widget.isBack
         ? IconButton(
             onPressed: () {
@@ -134,6 +127,7 @@ class _HGAppBarState extends State<HGAppBar> {
             width: 0,
           );
 
+    ///右边按钮widget
     Widget action = widget.actionName.isNotEmpty
         ? Container(
             child: Theme(
@@ -153,6 +147,7 @@ class _HGAppBarState extends State<HGAppBar> {
           )
         : SizedBox(width: 0);
 
+    ///标题widget
     Widget titleWidget = Semantics(
       namesRoute: true,
       header: true,
@@ -170,106 +165,6 @@ class _HGAppBarState extends State<HGAppBar> {
       ),
     );
 
-    Widget textfieldWidget = Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        SizedBox(
-          width: 8,
-        ),
-        Icon(
-          Icons.search,
-          color: Color.fromRGBO(0, 0, 0, 0.2),
-          size: 14,
-        ),
-        SizedBox(
-          width: 4,
-        ),
-        Expanded(
-          child: Container(
-            height: 30,
-            child: TextField(
-              style:
-                  TextStyle(color: Color.fromRGBO(0, 0, 0, 0.8), fontSize: 12),
-              controller: _controller,
-              focusNode: _focusNode,
-              autofocus: true,
-              textInputAction: TextInputAction.search,
-              onEditingComplete: () {
-                if (_controller.text.isNotEmpty) {
-                  _focusNode.unfocus();
-                  if (widget.onSearch != null) {
-                    widget.onSearch(_controller.text);
-                  }
-                } else {
-                  _focusNode.unfocus();
-                }
-              },
-              decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(top: -18),
-                  hintText: widget.hintText,
-                  hintStyle: TextStyle(
-                      fontSize: 12, color: Color.fromRGBO(0, 0, 0, 0.2)),
-                  border: InputBorder.none,
-                  fillColor: Colors.red),
-            ),
-          ),
-        )
-      ],
-    );
-    // Widget searchWidget = Container(
-    //   padding: EdgeInsets.only(
-    //       top: 8,
-    //       bottom: 8,
-    //       left: widget.isBack ? 0 : 16,
-    //       right: widget.actionName.isNotEmpty ? 0 : 16),
-    //   color: _backgroundColor,
-    //   child: Row(
-    //     crossAxisAlignment: CrossAxisAlignment.center,
-    //     mainAxisAlignment: MainAxisAlignment.center,
-    //     children: [
-    //       Expanded(
-    //         child: Container(
-    //           height: 30,
-    //           decoration: BoxDecoration(
-    //               color: Colors.white,
-    //               borderRadius: BorderRadius.circular(4),
-    //               border: Border.all(
-    //                   color: Color.fromRGBO(0, 0, 0, 0.1), width: 1)),
-    //           child: textfieldWidget,
-    //         ),
-    //       ),
-    //       (widget.showCancleBtn && _isFocus)
-    //           ? InkWell(
-    //               onTap: () {
-    //                 if (_controller.text.isNotEmpty && !_focusNode.hasFocus) {
-    //                   if (widget.onSearch != null) {
-    //                     widget.onSearch(_controller.text);
-    //                   }
-    //                 } else {
-    //                   _focusNode.unfocus();
-    //                 }
-    //               },
-    //               child: Container(
-    //                 width: 56,
-    //                 height: 26,
-    //                 alignment: Alignment.center,
-    //                 child: Text(
-    //                   (_controller.text.isNotEmpty && !_focusNode.hasFocus)
-    //                       ? '搜索'
-    //                       : '取消',
-    //                   style: TextStyle(
-    //                       fontSize: 14,
-    //                       height: 1.4,
-    //                       color: Theme.of(context).primaryColor),
-    //                 ),
-    //               ))
-    //           : SizedBox(
-    //               width: 0,
-    //             )
-    //     ],
-    //   ),
-    // );
-
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: _overlayStyle,
       child: Material(
@@ -280,11 +175,14 @@ class _HGAppBarState extends State<HGAppBar> {
             crossAxisAlignment: CrossAxisAlignment.center,
             // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              back,
+              widget.leftChild != null ? widget.leftChild : back,
               widget.isSearchBar
                   ? Expanded(
                       child: SearchWidget(
                         // isShowBtn: true,
+                        mainAxisAlignment: widget.mainAxisAlignment != null
+                            ? widget.mainAxisAlignment
+                            : null,
                         padding: EdgeInsets.only(
                             left: widget.isBack ? 0 : 16,
                             top: 7,
@@ -293,7 +191,7 @@ class _HGAppBarState extends State<HGAppBar> {
                       ),
                     )
                   : titleWidget,
-              action,
+              widget.rightChild != null ? widget.rightChild : action,
             ],
           ),
         ),
